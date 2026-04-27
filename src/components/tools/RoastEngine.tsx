@@ -39,7 +39,7 @@ const VIBES = ["Default", "Gen Z", "Pirate", "Shakespearean", "Tech Bro", "Passi
 const GROQ_CONFIG = {
   label: "Groq",
   baseUrl: "https://api.groq.com/openai/v1",
-  format: "openai" as const,
+  format: "openai" as string,
   placeholder: "gsk_...",
   keyLink: "https://console.groq.com/keys",
   model: "meta-llama/llama-4-scout-17b-16e-instruct",

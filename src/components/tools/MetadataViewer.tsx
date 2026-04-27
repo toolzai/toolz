@@ -80,7 +80,7 @@ function stripPngMetadata(buffer: ArrayBuffer): Blob | null {
     offset += 8 + length + 4;
   }
   
-  return new Blob(segments, { type: "image/png" });
+  return new Blob(segments as BlobPart[], { type: "image/png" });
 }
 
 function stripWebpMetadata(buffer: ArrayBuffer): Blob | null {
@@ -115,7 +115,7 @@ function stripWebpMetadata(buffer: ArrayBuffer): Blob | null {
   dv.setUint32(4, totalLength - 8, true); 
   segments[0] = head;
   
-  return new Blob(segments, { type: "image/webp" });
+  return new Blob(segments as BlobPart[], { type: "image/webp" });
 }
 
 export default function MetadataViewer({ file, previewUrl }: { file: File, previewUrl: string }) {
