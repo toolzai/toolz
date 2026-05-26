@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import NavigationDock from "@/components/NavigationDock";
 import AdInfo from "@/components/AdInfo";
 import GlobalAds from "@/components/GlobalAds";
-import FeedbackForm from "@/components/FeedbackForm";
+// import FeedbackForm from "@/components/FeedbackForm";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -95,7 +95,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <NavigationDock />
-        <FeedbackForm />
+        {/* <FeedbackForm /> */}
         <AdInfo />
         <GlobalAds />
       </body>
