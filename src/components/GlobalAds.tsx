@@ -20,8 +20,9 @@ export default function GlobalAds() {
     <>
       <Script 
         src="https://quge5.com/88/tag.min.js" 
-        data-zone="217476" 
-        strategy="lazyOnload" 
+        data-zone="243379" 
+        strategy="afterInteractive"
+        async 
         data-cfasync="false" 
       />
     </>
