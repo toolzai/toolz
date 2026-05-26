@@ -18,13 +18,22 @@ export default function GlobalAds() {
 
   return (
     <>
+      {/* Vignette Banner */}
+      <Script id="moneytag-vignette" strategy="afterInteractive">
+        {`(function(s){s.dataset.zone='10695996',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`}
+      </Script>
+
+      {/* Push Notifications */}
       <Script 
-        src="https://quge5.com/88/tag.min.js" 
-        data-zone="243379" 
+        src="https://5gvci.com/act/files/tag.min.js?z=11061750" 
         strategy="afterInteractive"
-        async 
         data-cfasync="false" 
+        async 
       />
+
+      {/* In-Page Push */}
+      <Script id="moneytag-inpage-push" strategy="afterInteractive">
+        {`(function(s){s.dataset.zone='11061963',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`}
+      </Script>
     </>
-  );
-}
+  );}
