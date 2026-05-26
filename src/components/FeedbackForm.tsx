@@ -116,9 +116,10 @@ export default function FeedbackForm() {
         setIsOpen(false);
         setStatus("idle");
       }, 2000);
-    } catch {
+    } catch (err: unknown) {
+      const errObj = err as { text?: string; status?: number } | null;
       setStatus("error");
-      setErrorMsg("Failed to send. Please try again later.");
+      setErrorMsg(errObj?.text || "Failed to send. Please try again.");
     }
   }
 
