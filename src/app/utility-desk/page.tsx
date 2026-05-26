@@ -1,10 +1,11 @@
 import ImageWorkspace from "@/components/ImageWorkspace";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import AdBanner from "@/components/AdBanner";
 
 export default function UtilityDesk() {
   return (
-    <main className="min-h-screen w-full flex flex-col items-center p-6 sm:p-12">
+    <main className="min-h-screen w-full flex flex-col items-center p-6 pb-32 sm:p-12 sm:pb-40">
       {/* Header */}
       <header className="w-full max-w-6xl flex justify-between items-center mb-8 z-10">
         <Link 
@@ -23,6 +24,8 @@ export default function UtilityDesk() {
       <div className="flex-1 w-full max-w-6xl flex flex-col">
         <ImageWorkspace />
       </div>
+
+      <AdBanner />
     </main>
   );
 }
