@@ -1,5 +1,4 @@
 import CreatorWorkspace from "@/components/CreatorWorkspace";
-import AdBanner from "@/components/AdBanner";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -24,8 +23,6 @@ export default function CreatorToolkit() {
       <div className="flex-1 w-full max-w-6xl flex flex-col">
         <CreatorWorkspace />
       </div>
-
-      <AdBanner />
     </main>
   );
 }

@@ -1,5 +1,4 @@
 import Scene from "@/components/Scene";
-import AdBanner from "@/components/AdBanner";
 import { Sparkles, Scissors, Image as ImageIcon, Wand2, Paintbrush, MonitorSmartphone, Code2 } from "lucide-react";
 import Link from "next/link";
 
@@ -59,7 +58,6 @@ export default function Home() {
         </Link>
 
       </div>
-      <AdBanner />
     </main>
   );
 }

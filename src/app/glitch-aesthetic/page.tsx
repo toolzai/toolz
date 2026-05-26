@@ -1,5 +1,4 @@
 import GlitchWorkspace from "@/components/GlitchWorkspace";
-import AdBanner from "@/components/AdBanner";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -24,8 +23,6 @@ export default function GlitchAesthetic() {
       <div className="flex-1 w-full max-w-6xl flex flex-col">
         <GlitchWorkspace />
       </div>
-
-      <AdBanner />
     </main>
   );
 }

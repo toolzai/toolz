@@ -1,5 +1,4 @@
 import MagicWorkspace from "@/components/MagicWorkspace";
-import AdBanner from "@/components/AdBanner";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -24,8 +23,6 @@ export default function MagicLab() {
       <div className="flex-1 w-full max-w-6xl flex flex-col">
         <MagicWorkspace />
       </div>
-
-      <AdBanner />
     </main>
   );
 }
