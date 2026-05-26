@@ -100,10 +100,8 @@ export default function FeedbackForm() {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          from_name: sName || "Anonymous",
-          from_email: sEmail || "Not provided",
-          message: sMsg,
-          contains_urls: containsUrl(sMsg) ? "⚠️ Yes" : "No",
+          name: sName || "Anonymous",
+          title: sMsg,
         },
         EMAILJS_PUBLIC_KEY
       );
