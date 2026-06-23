@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
 import clientPromise from '@/lib/mongodb';
 import { Collection, Db } from 'mongodb';
 
