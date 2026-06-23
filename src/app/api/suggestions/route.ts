@@ -25,7 +25,7 @@ async function getNextSequenceValue(db: Db, sequenceName: string): Promise<numbe
   const countersCollection: Collection = db.collection('counters');
   
   const sequenceDocument = await countersCollection.findOneAndUpdate(
-    { _id: sequenceName },
+    { _id: sequenceName as any },
     { $inc: { sequence_value: 1 } },
     { returnDocument: 'after', upsert: true }
   );
