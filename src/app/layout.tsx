@@ -5,6 +5,7 @@ import AdInfo from "@/components/AdInfo";
 import GlobalAds from "@/components/GlobalAds";
 import SuggestionBox from "@/components/SuggestionBox";
 import ConditionalLayoutElements from "@/components/ConditionalLayoutElements";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -96,6 +97,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <ConditionalLayoutElements />
+        <Analytics />
       </body>
     </html>
   );
