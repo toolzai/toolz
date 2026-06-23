@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import NavigationDock from "@/components/NavigationDock";
 import AdInfo from "@/components/AdInfo";
 import GlobalAds from "@/components/GlobalAds";
-// import FeedbackForm from "@/components/FeedbackForm";
+import SuggestionBox from "@/components/SuggestionBox";
+import ConditionalLayoutElements from "@/components/ConditionalLayoutElements";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -94,10 +95,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         {children}
-        <NavigationDock />
-        {/* <FeedbackForm /> */}
-        <AdInfo />
-        <GlobalAds />
+        <ConditionalLayoutElements />
       </body>
     </html>
   );
