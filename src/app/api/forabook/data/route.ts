@@ -3,6 +3,7 @@ import { jwtVerify } from 'jose';
 import clientPromise from '@/lib/mongodb';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 
 const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback_secret_key_change_in_production');
 
