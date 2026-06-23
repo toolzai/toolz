@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 import clientPromise from '@/lib/mongodb';
