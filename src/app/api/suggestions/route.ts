@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
-import clientPromise from '@/lib/mongodb';
-import { Collection, Db } from 'mongodb';
+import { createClient } from '@/lib/supabase/server';
 
 // Simple in-memory rate limiting (works per lambda instance, not perfect for distributed but good enough for basic protection)
 const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
@@ -23,20 +22,15 @@ function isInvalidContent(text: string): { invalid: boolean; reason?: string } {
   return { invalid: false };
 }
 
-async function getNextSequenceValue(db: Db, sequenceName: string): Promise<number> {
-  const countersCollection: Collection = db.collection('counters');
+async function getNextSequenceValue(supabase: any): Promise<number> {
+  // Call a Postgres function to atomically increment and return the sequence
+  const { data, error } = await supabase.rpc('get_next_sequence_value', { sequence_name: 'anonymousUserId' });
   
-  const sequenceDocument = await countersCollection.findOneAndUpdate(
-    { _id: sequenceName as any },
-    { $inc: { sequence_value: 1 } },
-    { returnDocument: 'after', upsert: true }
-  );
-
-  if (!sequenceDocument) {
-      throw new Error('Failed to generate sequence value');
+  if (error) {
+    throw new Error('Failed to generate sequence value: ' + error.message);
   }
 
-  return sequenceDocument.sequence_value;
+  return data;
 }
 
 export async function POST(req: Request) {
@@ -85,9 +79,8 @@ export async function POST(req: Request) {
     // Tools Validation
     const selectedTools = Array.isArray(tools) ? tools.filter(t => typeof t === 'string').slice(0, 10) : [];
 
-    // 4. Connect to DB
-    const client = await clientPromise;
-    const db = client.db('toolx');
+    // 4. Connect to Supabase
+    const supabase = await createClient();
 
     // 5. Format Data
     let finalName = name ? name.trim() : null;
@@ -95,21 +88,24 @@ export async function POST(req: Request) {
 
     if (!finalName) {
       // Generate anonymous ID
-      const seqValue = await getNextSequenceValue(db, 'anonymousUserId');
+      const seqValue = await getNextSequenceValue(supabase);
       // Format to 6 digits, e.g. 000001
       const paddedSeq = String(seqValue).padStart(6, '0');
       finalName = `anonymous${paddedSeq}`;
     }
 
     // 6. Insert into DB
-    const suggestionsCollection = db.collection('suggestions');
-    await suggestionsCollection.insertOne({
+    const { error: insertError } = await supabase.from('suggestions').insert({
       feedback: feedback.trim(),
       name: finalName,
       email: finalEmail,
       tools: selectedTools,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     });
+
+    if (insertError) {
+      throw insertError;
+    }
 
     return NextResponse.json({ success: true, message: 'Suggestion submitted successfully!' }, { status: 201 });
   } catch (error) {

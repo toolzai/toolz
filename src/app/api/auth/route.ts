@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
-import clientPromise from '@/lib/mongodb';
+import { createClient } from '@/lib/supabase/server';
 
 // Define secret key using TextEncoder as required by jose
 const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback_secret_key_change_in_production');
@@ -30,16 +30,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Server misconfiguration.' }, { status: 500 });
     }
 
-    // Connect to DB for brute-force tracking
-    const client = await clientPromise;
-    const db = client.db('toolx');
-    const attemptsCollection = db.collection('login_attempts');
+    // Connect to Supabase
+    const supabase = await createClient();
 
     // Get IP address for rate limiting
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
 
     if (ip !== 'unknown') {
-      const attemptDoc = await attemptsCollection.findOne({ ip });
+      const { data: attemptDoc } = await supabase
+        .from('login_attempts')
+        .select('*')
+        .eq('ip', ip)
+        .single();
+        
       if (attemptDoc && attemptDoc.lockUntil && attemptDoc.lockUntil > Date.now()) {
         const remainingMinutes = Math.ceil((attemptDoc.lockUntil - Date.now()) / 60000);
         return NextResponse.json(
@@ -52,16 +55,22 @@ export async function POST(req: Request) {
     // Helper to record failed attempt
     const recordFailedAttempt = async () => {
       if (ip === 'unknown') return;
-      const attemptDoc = await attemptsCollection.findOne({ ip });
+      
+      const { data: attemptDoc } = await supabase
+        .from('login_attempts')
+        .select('*')
+        .eq('ip', ip)
+        .single();
+        
       if (attemptDoc) {
         const newCount = attemptDoc.count + 1;
-        const updates: any = { $set: { count: newCount } };
+        const updates: any = { count: newCount };
         if (newCount >= MAX_ATTEMPTS) {
-          updates.$set.lockUntil = Date.now() + LOCKOUT_DURATION_MS;
+          updates.lockUntil = Date.now() + LOCKOUT_DURATION_MS;
         }
-        await attemptsCollection.updateOne({ ip }, updates);
+        await supabase.from('login_attempts').update(updates).eq('ip', ip);
       } else {
-        await attemptsCollection.insertOne({ ip, count: 1, lockUntil: null });
+        await supabase.from('login_attempts').insert({ ip, count: 1, lockUntil: null });
       }
     };
 
@@ -81,7 +90,7 @@ export async function POST(req: Request) {
 
     // Reset attempts on successful login
     if (ip !== 'unknown') {
-      await attemptsCollection.deleteOne({ ip });
+      await supabase.from('login_attempts').delete().eq('ip', ip);
     }
 
     // 3. Create a JWT token using jose (Strict 1000s expiration)

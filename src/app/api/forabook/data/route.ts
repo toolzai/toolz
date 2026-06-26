@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
-import clientPromise from '@/lib/mongodb';
+import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,13 +24,18 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Unauthorized or token expired' }, { status: 401 });
     }
 
-    // 3. Connect to DB and fetch data
-    const client = await clientPromise;
-    const db = client.db('toolx');
-    const suggestionsCollection = db.collection('suggestions');
+    // 3. Connect to Supabase and fetch data
+    const supabase = await createClient();
 
     // Fetch all, sort by newest first
-    const data = await suggestionsCollection.find({}).sort({ createdAt: -1 }).toArray();
+    const { data, error: dbError } = await supabase
+      .from('suggestions')
+      .select('*')
+      .order('createdAt', { ascending: false });
+
+    if (dbError) {
+      throw dbError;
+    }
 
     return NextResponse.json({ success: true, data }, { status: 200 });
 
